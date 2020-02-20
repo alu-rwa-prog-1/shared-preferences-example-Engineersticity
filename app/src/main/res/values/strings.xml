@@ -9,7 +9,7 @@
     <string name="department_prompt">Choose a department</string>
     <string name="session_prompt">Choose a session</string>
 
-    <string name="message">%1$s\'s Record has been submitted successfully</string>
+    <string name="message">%1$s\'s Records have been submitted successfully</string>
 
     <string-array name="department_array">
         <item>Computer Science</item>
