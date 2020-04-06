@@ -15,7 +15,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/input_round_corners"
@@ -31,12 +31,12 @@
             android:layout_height="wrap_content"
             android:layout_x="9dp"
             android:layout_y="14dp"
-            android:textColor="#000000"
-            android:textStyle="bold"
             android:drawableLeft="@drawable/session_icon"
             android:drawablePadding="10dp"
             android:text="Session"
-            android:textSize="18sp" />
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -55,7 +55,7 @@
 
     <EditText
         android:id="@+id/student_id"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -81,7 +81,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/input_round_corners"
@@ -104,7 +104,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/input_round_corners"
@@ -126,7 +126,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/input_round_corners"
         android:backgroundTint="#FFFFFF"
@@ -147,7 +147,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/input_round_corners"
@@ -170,7 +170,7 @@
             android:text="Gender"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
 
         <RadioGroup
@@ -201,7 +201,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/input_round_corners"
@@ -217,12 +217,12 @@
             android:layout_height="wrap_content"
             android:layout_x="9dp"
             android:layout_y="14dp"
-            android:textColor="#000000"
-            android:textStyle="bold"
             android:drawableLeft="@drawable/department_icon"
             android:drawablePadding="10dp"
             android:text="Department"
-            android:textSize="18sp" />
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinner1"
@@ -239,26 +239,59 @@
             app:layout_constraintTop_toBottomOf="@+id/radioGender" />
     </AbsoluteLayout>
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="150dp"
-        android:layout_height="48dp"
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/input_round_corners"
-        android:backgroundTint="@color/colorAccent"
-        android:text="Save"
-        android:textColor="@color/actionbar_text"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:layout_marginTop="54dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/absoluteLayout"
+        app:layout_constraintTop_toBottomOf="@+id/absoluteLayout">
 
-        />
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="130dp"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/input_round_corners"
+            android:backgroundTint="@color/colorAccent"
+            android:text="Save"
+            android:textColor="@color/actionbar_text"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="130dp"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/input_round_corners"
+            android:backgroundTint="@color/colorAccent"
+            android:text="Add"
+            android:textColor="@color/actionbar_text"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
