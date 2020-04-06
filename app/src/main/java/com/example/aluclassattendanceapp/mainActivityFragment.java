@@ -38,7 +38,7 @@ public class mainActivityFragment extends Fragment {
     RadioGroup gender;
     RadioButton radioFemale, radioMale;
 
-    Button save, add;
+    Button save, add, notify;
     String genderText;
 
     int countGender = 0;
@@ -54,7 +54,7 @@ public class mainActivityFragment extends Fragment {
     private int CURRENT_PROGRESS = 50;
 
     private static final String KEY_TEXT_REPLY = "key_text_reply";
-    String replyLabel = "Hello from the other side";
+    String replyLabel = "Reply to your Facilitator";
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -79,14 +79,11 @@ public class mainActivityFragment extends Fragment {
 
         Intent landingIntent = new Intent(getContext(), mainActivityFragment.class);
 
-        PendingIntent replyPendingIntent =
-                PendingIntent.getBroadcast(getContext(), 0, landingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(getContext(), 0, landingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.gender_icon,
-                        "Reply", replyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .build();
+        NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.gender_icon, "Reply", replyPendingIntent)
+                .addRemoteInput(remoteInput)
+                .build();
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(Objects.requireNonNull(getContext()), CHANNEL_ID);
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(Objects.requireNonNull(getContext()));
@@ -165,6 +162,7 @@ public class mainActivityFragment extends Fragment {
 
         save = view.findViewById(R.id.saveButton);
         add = view.findViewById(R.id.addButton);
+        notify = view.findViewById(R.id.showNotification);
         email = view.findViewById(R.id.student_email);
         password = view.findViewById(R.id.student_password);
         student_id = view.findViewById(R.id.student_id);
@@ -214,6 +212,14 @@ public class mainActivityFragment extends Fragment {
             }
         });
 
+        notify.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
+                DisplayNotification(v);
+            }
+        });
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -249,9 +255,7 @@ public class mainActivityFragment extends Fragment {
                     radioMale.setError("Gender Required");
                 }
 
-                DisplayNotification(v);
-
-               /* if (!((password.getText().toString().length() < 8)) && !(email.getText().toString().length() == 0)
+                if (!((password.getText().toString().length() < 8)) && !(email.getText().toString().length() == 0)
                         && !(student_name.getText().toString().length() == 0) && (countGender > 0)) {
 
                     editor.putString(Password, passwordText);
@@ -264,7 +268,7 @@ public class mainActivityFragment extends Fragment {
 
 
                     startActivity(intent);
-                }*/
+                }
             }
         });
 
