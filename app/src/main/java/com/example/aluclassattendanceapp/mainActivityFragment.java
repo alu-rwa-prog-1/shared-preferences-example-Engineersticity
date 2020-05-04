@@ -1,21 +1,27 @@
 package com.example.aluclassattendanceapp;
 
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +30,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.example.aluclassattendanceapp.util.BarcodeCaptureActivity;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.Objects;
 
@@ -40,6 +50,9 @@ public class mainActivityFragment extends Fragment {
 
     Button save, add, notify;
     String genderText;
+
+    public static final int RC_BARCODE_CAPTURE = 9001;
+    public static final int REQUEST_CODE_PERMISSION = 1001;
 
     int countGender = 0;
 
@@ -61,10 +74,10 @@ public class mainActivityFragment extends Fragment {
     public void DisplayNotification(View view) {
         CreateNotificationChannel();
 
-        /*Intent landingIntent = new Intent(getContext(), confirmation.class);
+        Intent landingIntent = new Intent(getContext(), confirmation.class);
         landingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, landingIntent, PendingIntent.FLAG_ONE_SHOT);
-
+/*
         Intent replyIntent = new Intent(getContext(), confirmation.class);
         landingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent replyPendingIntent = PendingIntent.getActivity(getContext(), 0, replyIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -77,9 +90,9 @@ public class mainActivityFragment extends Fragment {
                 .setLabel(replyLabel)
                 .build();
 
-        Intent landingIntent = new Intent(getContext(), mainActivityFragment.class);
+//        Intent landingIntent = new Intent(getContext(), confirmation.class);
 
-        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(getContext(), 0, landingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent replyPendingIntent = PendingIntent.getActivity(getContext(), 0, landingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.gender_icon, "Reply", replyPendingIntent)
                 .addRemoteInput(remoteInput)
@@ -93,7 +106,7 @@ public class mainActivityFragment extends Fragment {
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         builder.addAction(action);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
-//        builder.setContentIntent(pendingIntent);
+        builder.setContentIntent(pendingIntent);
 //        builder.addAction(R.drawable.email_icon, "REPLY", replyPendingIntent);
 //        builder.addAction(R.drawable.department_icon, "DISMISS", dismissPendingIntent);
 
@@ -154,6 +167,47 @@ public class mainActivityFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void openScannerIfCameraPermissionAvailable() {
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CODE_PERMISSION);
+        } else initiateScan();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initiateScan();
+                }
+            }
+        }
+    }
+
+    public void initiateScan() {
+        Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+        startActivityForResult(intent, RC_BARCODE_CAPTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == CommonStatusCodes.SUCCESS && requestCode == RC_BARCODE_CAPTURE) {
+            if (data == null) return;
+            Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+            assert barcode != null;
+            final String scanResult = barcode.displayValue;
+            if (scanResult == null) return;
+
+            student_id.setText(scanResult);
+        }
+    }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,10 +216,10 @@ public class mainActivityFragment extends Fragment {
 
         save = view.findViewById(R.id.saveButton);
         add = view.findViewById(R.id.addButton);
+        student_id = view.findViewById(R.id.student_id);
         notify = view.findViewById(R.id.showNotification);
         email = view.findViewById(R.id.student_email);
         password = view.findViewById(R.id.student_password);
-        student_id = view.findViewById(R.id.student_id);
         student_name = view.findViewById(R.id.student_name);
         gender = view.findViewById(R.id.radioGender);
         radioMale = view.findViewById(R.id.radioMale);
@@ -186,6 +240,16 @@ public class mainActivityFragment extends Fragment {
 
 
         sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        student_id.setInputType(InputType.TYPE_NULL);
+
+        student_id.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
+                openScannerIfCameraPermissionAvailable();
+            }
+        });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
